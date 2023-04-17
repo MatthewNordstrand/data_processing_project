@@ -30,3 +30,9 @@ describe("S3 Bucket Tests", () => {
     template.hasResourceProperties("AWS::S3::Bucket", {});
   });
 });
+
+describe("DynamoDB Table", () => {
+  test("Table Exists", () => {
+    template.resourceCountIs("AWS::DynamoDB::Table", 1);
+  });
+});
