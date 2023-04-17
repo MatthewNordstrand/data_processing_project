@@ -10,7 +10,7 @@ beforeAll(() => {
 });
 
 describe("Lambda Function Tests", () => {
-  test("Role exists", () => {
+  test("Role Exists", () => {
     template.hasResourceProperties("AWS::IAM::Role", {
       RoleName: "MattDataLambda",
     });
@@ -18,9 +18,15 @@ describe("Lambda Function Tests", () => {
 });
 
 describe("Firehose Tests", () => {
-  test("Role exists", () => {
+  test("Role Exists", () => {
     template.hasResourceProperties("AWS::IAM::Role", {
       RoleName: "MattDataFirehose",
     });
+  });
+});
+
+describe("S3 Bucket Tests", () => {
+  test("Bucket Exists", () => {
+    template.hasResourceProperties("AWS::S3::Bucket", {});
   });
 });
