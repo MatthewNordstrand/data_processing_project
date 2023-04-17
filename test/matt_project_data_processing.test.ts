@@ -1,17 +1,18 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as MattProjectDataProcessing from '../lib/matt_project_data_processing-stack';
+import * as cdk from "aws-cdk-lib";
+import { Template } from "aws-cdk-lib/assertions";
+import { MattProjectDataProcessingStack } from "../lib/matt_project_data_processing-stack";
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/matt_project_data_processing-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new MattProjectDataProcessing.MattProjectDataProcessingStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+let template: Template;
+beforeAll(() => {
+  const app = new cdk.App();
+  const stack = new MattProjectDataProcessingStack(app, "TestStack");
+  template = Template.fromStack(stack);
+});
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+describe("Lambda Function IAM Tests", () => {
+  test("Role exists", () => {
+    template.hasResourceProperties("AWS::IAM::Role", {
+      RoleName: "MattDataLambda",
+    });
+  });
 });
