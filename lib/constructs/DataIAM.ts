@@ -6,12 +6,20 @@ export default class DataIAM extends Construct {
     super(scope, id);
 
     this.initLambdaRole();
+    this.initFirehoseRole();
   }
 
   private initLambdaRole() {
     new Role(this, "LambdaRole", {
       assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
       roleName: "MattDataLambda",
+    });
+  }
+
+  private initFirehoseRole() {
+    new Role(this, "FirehoseRole", {
+      assumedBy: new ServicePrincipal("firehose.amazonaws.com"),
+      roleName: "MattDataFirehose",
     });
   }
 }

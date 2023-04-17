@@ -9,10 +9,18 @@ beforeAll(() => {
   template = Template.fromStack(stack);
 });
 
-describe("Lambda Function IAM Tests", () => {
+describe("Lambda Function Tests", () => {
   test("Role exists", () => {
     template.hasResourceProperties("AWS::IAM::Role", {
       RoleName: "MattDataLambda",
+    });
+  });
+});
+
+describe("Firehose Tests", () => {
+  test("Role exists", () => {
+    template.hasResourceProperties("AWS::IAM::Role", {
+      RoleName: "MattDataFirehose",
     });
   });
 });
