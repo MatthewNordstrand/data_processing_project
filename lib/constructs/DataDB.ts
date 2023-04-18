@@ -1,4 +1,4 @@
-import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType, StreamViewType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Stream } from "aws-cdk-lib/aws-kinesis";
 import { Construct } from "constructs";
 
@@ -22,6 +22,7 @@ export default class DataDB extends Construct {
     new Table(this, "Table", {
       partitionKey: { name: "id", type: AttributeType.STRING },
       kinesisStream: this.stream,
+      stream: StreamViewType.NEW_IMAGE,
     });
   }
 }
