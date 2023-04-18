@@ -1,4 +1,4 @@
-import { PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 
 export default class DataIAM extends Construct {
@@ -17,6 +17,7 @@ export default class DataIAM extends Construct {
 
     lambdaRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["lambda:*"],
       })
@@ -24,6 +25,7 @@ export default class DataIAM extends Construct {
 
     lambdaRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["cloudwatch:*"],
       })
@@ -31,6 +33,7 @@ export default class DataIAM extends Construct {
 
     lambdaRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["firehose:*"],
       })
@@ -45,6 +48,7 @@ export default class DataIAM extends Construct {
 
     firehoseRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["lambda:*"],
       })
@@ -52,6 +56,7 @@ export default class DataIAM extends Construct {
 
     firehoseRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["s3:*"],
       })
@@ -59,6 +64,7 @@ export default class DataIAM extends Construct {
 
     firehoseRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["redshift:*"],
       })
@@ -66,6 +72,7 @@ export default class DataIAM extends Construct {
 
     firehoseRole.addToPolicy(
       new PolicyStatement({
+        effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["cloudwatch:*"],
       })
