@@ -4,6 +4,8 @@ import { Construct } from "constructs";
 import DataDB from "./constructs/DataDB";
 import DataIAM from "./constructs/DataIAM";
 import DataLambda from "./constructs/DataLambda";
+import DataDeliveryStream from "./constructs/DataDeliveryStream";
+import DataWarehouse from "./constructs/DataWarehouse";
 
 export class MattProjectDataProcessingStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -13,8 +15,16 @@ export class MattProjectDataProcessingStack extends cdk.Stack {
 
     const dataDB = new DataDB(this, "DynamoDB");
 
-    new Bucket(this, "Bucket");
+    const redshift = new DataWarehouse(this, "Redshift");
 
     new DataLambda(this, "Lambda", { lambdaRole: dataIAM.getRoles().lambdaRole, dataTable: dataDB.getTable() });
+
+    const sourceBucket = new Bucket(this, "Bucket");
+
+    new DataDeliveryStream(this, "DeliveryStream", {
+      clusterJdbcurl: redshift.getCluster().attrEndpointAddress,
+      kinesisFirehoseRoleArn: dataIAM.getRoles().firehoseRole.roleArn,
+      sourceBucketArn: sourceBucket.bucketArn,
+    });
   }
 }
