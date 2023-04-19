@@ -2,6 +2,9 @@ import { Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws
 import { Construct } from "constructs";
 
 export default class DataIAM extends Construct {
+  lambdaRole: Role;
+  firehoseRole: Role;
+
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
@@ -10,12 +13,12 @@ export default class DataIAM extends Construct {
   }
 
   private initLambdaRole() {
-    const lambdaRole = new Role(this, "LambdaRole", {
+    this.lambdaRole = new Role(this, "LambdaRole", {
       assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
       roleName: "MattDataLambda",
     });
 
-    lambdaRole.addToPolicy(
+    this.lambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
@@ -23,7 +26,7 @@ export default class DataIAM extends Construct {
       })
     );
 
-    lambdaRole.addToPolicy(
+    this.lambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
@@ -31,7 +34,7 @@ export default class DataIAM extends Construct {
       })
     );
 
-    lambdaRole.addToPolicy(
+    this.lambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
@@ -41,12 +44,12 @@ export default class DataIAM extends Construct {
   }
 
   private initFirehoseRole() {
-    const firehoseRole = new Role(this, "FirehoseRole", {
+    this.firehoseRole = new Role(this, "FirehoseRole", {
       assumedBy: new ServicePrincipal("firehose.amazonaws.com"),
       roleName: "MattDataFirehose",
     });
 
-    firehoseRole.addToPolicy(
+    this.firehoseRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
@@ -54,7 +57,7 @@ export default class DataIAM extends Construct {
       })
     );
 
-    firehoseRole.addToPolicy(
+    this.firehoseRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
@@ -62,7 +65,7 @@ export default class DataIAM extends Construct {
       })
     );
 
-    firehoseRole.addToPolicy(
+    this.firehoseRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
@@ -70,12 +73,16 @@ export default class DataIAM extends Construct {
       })
     );
 
-    firehoseRole.addToPolicy(
+    this.firehoseRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["cloudwatch:*"],
       })
     );
+  }
+
+  public getRoles() {
+    return { lambdaRole: this.lambdaRole, firehoseRole: this.firehoseRole };
   }
 }

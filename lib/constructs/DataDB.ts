@@ -4,6 +4,7 @@ import { Construct } from "constructs";
 
 export default class DataDB extends Construct {
   stream: Stream;
+  table: Table;
 
   constructor(scope: Construct, id: string) {
     super(scope, id);
@@ -19,10 +20,14 @@ export default class DataDB extends Construct {
   }
 
   private initDatabase() {
-    new Table(this, "Table", {
+    this.table = new Table(this, "Table", {
       partitionKey: { name: "id", type: AttributeType.STRING },
       kinesisStream: this.stream,
       stream: StreamViewType.NEW_IMAGE,
     });
+  }
+
+  public getTable() {
+    return this.table;
   }
 }
