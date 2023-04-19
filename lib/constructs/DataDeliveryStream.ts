@@ -14,7 +14,7 @@ export default class DataDeliveryStream extends Construct {
     new CfnDeliveryStream(this, "DeliveryStream", {
       redshiftDestinationConfiguration: {
         clusterJdbcurl: props.clusterJdbcurl,
-        copyCommand: { dataTableName: "transformation" },
+        copyCommand: { dataTableName: "transformation", copyOptions: "json 'auto'" },
         roleArn: props.kinesisFirehoseRoleArn,
         s3Configuration: { bucketArn: props.sourceBucketArn, roleArn: props.kinesisFirehoseRoleArn },
         username: "username",
