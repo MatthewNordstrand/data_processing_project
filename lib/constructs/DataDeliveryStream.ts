@@ -18,7 +18,7 @@ export default class DataDeliveryStream extends Construct {
         roleArn: props.kinesisFirehoseRoleArn,
         s3Configuration: { bucketArn: props.sourceBucketArn, roleArn: props.kinesisFirehoseRoleArn },
         username: "username",
-        password: "password",
+        password: "Password",
       },
     });
   }
