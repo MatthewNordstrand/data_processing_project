@@ -38,6 +38,14 @@ export default class DataIAM extends Construct {
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
+        actions: ["logs:*"],
+      })
+    );
+
+    this.lambdaRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: ["*"],
         actions: ["firehose:*"],
       })
     );
@@ -78,6 +86,14 @@ export default class DataIAM extends Construct {
         effect: Effect.ALLOW,
         resources: ["*"],
         actions: ["cloudwatch:*"],
+      })
+    );
+
+    this.firehoseRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: ["*"],
+        actions: ["logs:*"],
       })
     );
   }
