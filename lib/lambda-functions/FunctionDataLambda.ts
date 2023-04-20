@@ -7,10 +7,6 @@ async function handler(event: any, context: any) {
   // Yeeeeeahhhh! Progress!
   // const firehose = new Firehose();
   // firehose.putRecord(); //This call will put data into the stream.
-
-  return {
-    statusCode: 200,
-  };
 }
 
 export { handler };
