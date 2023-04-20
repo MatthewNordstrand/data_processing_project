@@ -9,14 +9,17 @@ export default class DataWarehouse extends Construct {
 
     this.cluster = new CfnCluster(this, "RedshiftCluster", {
       clusterType: "single-node",
-      dbName: "data_processing_warehouse",
+      dbName: "warehouse",
       masterUsername: "username",
-      masterUserPassword: "Password",
+      masterUserPassword: "Password1",
       nodeType: "dc2.large",
+      publiclyAccessible: true,
     });
   }
 
-  public getCluster() {
-    return this.cluster;
+  public getJDBCUrl() {
+    const endpoint = this.cluster.attrEndpointAddress;
+    const port = this.cluster.attrEndpointPort;
+    return `jdbc:redshift://${endpoint}:${port}/warehouse`;
   }
 }

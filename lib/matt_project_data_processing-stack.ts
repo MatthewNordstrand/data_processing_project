@@ -22,7 +22,7 @@ export class MattProjectDataProcessingStack extends cdk.Stack {
     const sourceBucket = new Bucket(this, "Bucket");
 
     new DataDeliveryStream(this, "DeliveryStream", {
-      clusterJdbcurl: redshift.getCluster().attrEndpointAddress,
+      clusterJdbcurl: redshift.getJDBCUrl(),
       kinesisFirehoseRoleArn: dataIAM.getRoles().firehoseRole.roleArn,
       sourceBucketArn: sourceBucket.bucketArn,
     });
