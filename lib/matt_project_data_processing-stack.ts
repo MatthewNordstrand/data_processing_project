@@ -15,16 +15,16 @@ export class MattProjectDataProcessingStack extends cdk.Stack {
 
     const dataDB = new DataDB(this, "DynamoDB");
 
-    // const redshift = new DataWarehouse(this, "Redshift");
+    const redshift = new DataWarehouse(this, "Redshift");
 
     new DataLambda(this, "Lambda", { lambdaRole: dataIAM.getRoles().lambdaRole, dataTable: dataDB.getTable() });
 
-    // const sourceBucket = new Bucket(this, "Bucket");
+    const sourceBucket = new Bucket(this, "Bucket");
 
-    // new DataDeliveryStream(this, "DeliveryStream", {
-    //   clusterJdbcurl: redshift.getJDBCUrl(),
-    //   kinesisFirehoseRoleArn: dataIAM.getRoles().firehoseRole.roleArn,
-    //   sourceBucketArn: sourceBucket.bucketArn,
-    // });
+    new DataDeliveryStream(this, "DeliveryStream", {
+      clusterJdbcurl: redshift.getJDBCUrl(),
+      kinesisFirehoseRoleArn: dataIAM.getRoles().firehoseRole.roleArn,
+      sourceBucketArn: sourceBucket.bucketArn,
+    });
   }
 }
