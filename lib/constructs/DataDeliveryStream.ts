@@ -1,4 +1,5 @@
 import { CfnDeliveryStream } from "aws-cdk-lib/aws-kinesisfirehose";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 interface DataDeliveryStreamProps {
@@ -11,7 +12,7 @@ export default class DataDeliveryStream extends Construct {
   constructor(scope: Construct, id: string, props: DataDeliveryStreamProps) {
     super(scope, id);
 
-    new CfnDeliveryStream(this, "DeliveryStream", {
+    const stream = new CfnDeliveryStream(this, "DeliveryStream", {
       redshiftDestinationConfiguration: {
         clusterJdbcurl: props.clusterJdbcurl,
         copyCommand: { dataTableName: "transformation", copyOptions: "json 'auto'" },
@@ -20,6 +21,11 @@ export default class DataDeliveryStream extends Construct {
         username: "username",
         password: "Password1",
       },
+    });
+
+    new StringParameter(this, "StreamArn", {
+      parameterName: "/mattdata/deliverystream/arn",
+      stringValue: stream.attrArn,
     });
   }
 }
