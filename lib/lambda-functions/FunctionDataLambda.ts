@@ -9,13 +9,15 @@ async function handler(event: any) {
   const processedRecords = event.Records.map((record: any) => {
     const image = record.dynamodb.NewImage;
 
-    const blob = Buffer.from(
-      JSON.stringify({
-        id: image.id?.S,
-        name: image.name?.S,
-        practice: image.practice?.S,
-      })
-    );
+    const transformedData = {
+      id: image.id?.S,
+      name: image.name?.S,
+      practice: image.practice?.S,
+    };
+
+    console.log(`Data: ${JSON.stringify(transformedData)}`);
+
+    const blob = Buffer.from(JSON.stringify(transformedData));
 
     return {
       Data: blob,
