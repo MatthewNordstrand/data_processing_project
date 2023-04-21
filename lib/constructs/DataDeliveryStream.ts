@@ -13,6 +13,7 @@ export default class DataDeliveryStream extends Construct {
     super(scope, id);
 
     const stream = new CfnDeliveryStream(this, "DeliveryStream", {
+      deliveryStreamName: "matt-data-transformation",
       redshiftDestinationConfiguration: {
         clusterJdbcurl: props.clusterJdbcurl,
         copyCommand: { dataTableName: "transformation", copyOptions: "json 'auto'" },
@@ -24,8 +25,8 @@ export default class DataDeliveryStream extends Construct {
     });
 
     new StringParameter(this, "StreamArn", {
-      parameterName: "/mattdata/deliverystream/arn",
-      stringValue: stream.attrArn,
+      parameterName: "/mattdata/deliverystream/name",
+      stringValue: stream.deliveryStreamName!,
     });
   }
 }

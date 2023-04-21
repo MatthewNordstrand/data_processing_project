@@ -1,8 +1,15 @@
-import { Firehose } from "aws-sdk";
+import { SSM, Firehose } from "aws-sdk";
 
-async function handler(event: any, context: any) {
+async function handler(event: any) {
   console.log(`Event: ${JSON.stringify(event)}`);
-  console.log(`Context: ${JSON.stringify(context)}`);
+
+  const ssm = new SSM();
+  const streamArn = (await ssm.getParameter({ Name: "/mattdata/deliverystream/arn" }).promise()).Parameter?.Value;
+
+  if (!streamArn) throw new Error("Unable to get the ARN for the Firehose Delivery Stream.");
+
+  const firehose = new Firehose();
+  firehose.putRecordBatch({ DeliveryStreamName: "no", Records: event.Records });
 
   // Yeeeeeahhhh! Progress!
   // const firehose = new Firehose();

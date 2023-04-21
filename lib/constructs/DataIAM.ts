@@ -49,6 +49,14 @@ export default class DataIAM extends Construct {
         actions: ["firehose:*"],
       })
     );
+
+    this.lambdaRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: ["*"],
+        actions: ["ssm:*"],
+      })
+    );
   }
 
   private initFirehoseRole() {
