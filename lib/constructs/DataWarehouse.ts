@@ -9,7 +9,7 @@ export default class DataWarehouse extends Construct {
 
     this.cluster = new CfnCluster(this, "RedshiftCluster", {
       clusterType: "single-node",
-      dbName: "warehouse",
+      dbName: "dev",
       masterUsername: "username",
       masterUserPassword: "Password1",
       nodeType: "dc2.large",
@@ -20,6 +20,6 @@ export default class DataWarehouse extends Construct {
   public getJDBCUrl() {
     const endpoint = this.cluster.attrEndpointAddress;
     const port = this.cluster.attrEndpointPort;
-    return `jdbc:redshift://${endpoint}:${port}/warehouse`;
+    return `jdbc:redshift://${endpoint}:${port}/dev`;
   }
 }
