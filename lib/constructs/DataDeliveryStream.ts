@@ -16,7 +16,7 @@ export default class DataDeliveryStream extends Construct {
       deliveryStreamName: "matt-data-transformation",
       redshiftDestinationConfiguration: {
         clusterJdbcurl: props.clusterJdbcurl,
-        copyCommand: { dataTableName: "dev", copyOptions: "json 'auto'" },
+        copyCommand: { dataTableName: "transformation", copyOptions: "json 'auto'" },
         roleArn: props.kinesisFirehoseRoleArn,
         s3Configuration: { bucketArn: props.sourceBucketArn, roleArn: props.kinesisFirehoseRoleArn },
         username: "username",
