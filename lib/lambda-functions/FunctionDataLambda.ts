@@ -1,19 +1,31 @@
 import { SSM, Firehose } from "aws-sdk";
 
 async function handler(event: any) {
-  console.log(`Event: ${JSON.stringify(event)}`);
-
   const ssm = new SSM();
-  const streamArn = (await ssm.getParameter({ Name: "/mattdata/deliverystream/arn" }).promise()).Parameter?.Value;
+  const streamName = (await ssm.getParameter({ Name: "/mattdata/deliverystream/name" }).promise()).Parameter?.Value;
 
-  if (!streamArn) throw new Error("Unable to get the ARN for the Firehose Delivery Stream.");
+  if (!streamName) throw new Error("Unable to get the name for the Firehose Delivery Stream.");
+
+  const processedRecords = event.Records.map((record: any) => {
+    const image = record.dynamodb.NewImage;
+
+    const blob = Buffer.from(
+      JSON.stringify({
+        id: image.id?.S,
+        name: image.name?.S,
+        practice: image.practice?.S,
+      })
+    );
+
+    return {
+      Data: blob,
+    };
+  });
 
   const firehose = new Firehose();
-  firehose.putRecordBatch({ DeliveryStreamName: "no", Records: event.Records });
-
-  // Yeeeeeahhhh! Progress!
-  // const firehose = new Firehose();
-  // firehose.putRecord(); //This call will put data into the stream.
+  firehose.putRecordBatch({ DeliveryStreamName: streamName, Records: processedRecords }, (err, _data) => {
+    if (err) throw new Error(err.stack);
+  });
 }
 
 export { handler };
