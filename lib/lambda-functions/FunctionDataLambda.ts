@@ -1,5 +1,9 @@
 import { SSM, Firehose } from "aws-sdk";
 
+// const streamName = ssm.getParameter({ Name: "/mattdata/deliverystream/name" }, (err, data) => {
+
+// });
+
 async function handler(event: any) {
   const ssm = new SSM();
   const streamName = (await ssm.getParameter({ Name: "/mattdata/deliverystream/name" }).promise()).Parameter?.Value;
