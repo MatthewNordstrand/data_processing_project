@@ -1,12 +1,9 @@
 import { SSM, Firehose } from "aws-sdk";
 
-// const streamName = ssm.getParameter({ Name: "/mattdata/deliverystream/name" }, (err, data) => {
-
-// });
+let _streamName: string | undefined;
 
 async function handler(event: any) {
-  const ssm = new SSM();
-  const streamName = (await ssm.getParameter({ Name: "/mattdata/deliverystream/name" }).promise()).Parameter?.Value;
+  const streamName = await getStreamName();
 
   if (!streamName) throw new Error("Unable to get the name for the Firehose Delivery Stream.");
 
@@ -32,6 +29,17 @@ async function handler(event: any) {
   firehose.putRecordBatch({ DeliveryStreamName: streamName, Records: processedRecords }, (err, _data) => {
     if (err) throw new Error(err.stack);
   });
+}
+
+async function getStreamName() {
+  //Perhaps change this all to a one-time initialization so I don't have to use Custom Resource?
+
+  if (!_streamName) {
+    const ssm = new SSM();
+    _streamName = (await ssm.getParameter({ Name: "/mattdata/deliverystream/name" }).promise()).Parameter?.Value;
+  }
+
+  return _streamName;
 }
 
 export { handler };
