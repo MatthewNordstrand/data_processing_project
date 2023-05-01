@@ -1,9 +1,10 @@
-import { SSM, Firehose } from "aws-sdk";
+import { SSM, Firehose, Redshift, RedshiftData } from "aws-sdk";
 
 let _streamName: string | undefined;
+let _dbinitialized = false;
 
 async function handler(event: any) {
-  const streamName = await getStreamName();
+  const { streamName } = await init();
 
   if (!streamName) throw new Error("Unable to get the name for the Firehose Delivery Stream.");
 
@@ -31,15 +32,30 @@ async function handler(event: any) {
   });
 }
 
-async function getStreamName() {
-  //Perhaps change this all to a one-time initialization so I don't have to use Custom Resource?
+async function init() {
+  const ssm = new SSM();
 
   if (!_streamName) {
-    const ssm = new SSM();
     _streamName = (await ssm.getParameter({ Name: "/mattdata/deliverystream/name" }).promise()).Parameter?.Value;
   }
 
-  return _streamName;
+  if (!_dbinitialized) {
+    const query =
+      "CREATE TABLE practicetable (id VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255), practice VARCHAR(255));";
+
+    const redshift = new RedshiftData();
+    await redshift
+      .executeStatement({
+        Database: "dev",
+        Sql: query,
+        ClusterIdentifier: "mattdata-cluster",
+      })
+      .promise();
+
+    _dbinitialized = true;
+  }
+
+  return { streamName: _streamName, dbinitialized: _dbinitialized };
 }
 
 export { handler };

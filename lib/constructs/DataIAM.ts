@@ -57,6 +57,14 @@ export default class DataIAM extends Construct {
         actions: ["ssm:*"],
       })
     );
+
+    this.lambdaRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: ["*"],
+        actions: ["redshift-data:*"],
+      })
+    );
   }
 
   private initFirehoseRole() {

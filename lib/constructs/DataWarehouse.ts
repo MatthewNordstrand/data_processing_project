@@ -1,5 +1,6 @@
 import { Construct } from "constructs";
 import { CfnCluster } from "aws-cdk-lib/aws-redshift";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 export default class DataWarehouse extends Construct {
   cluster: CfnCluster;
@@ -10,6 +11,7 @@ export default class DataWarehouse extends Construct {
     super(scope, id);
 
     this.cluster = new CfnCluster(this, "RedshiftCluster", {
+      clusterIdentifier: "mattdata-cluster",
       clusterType: "single-node",
       dbName: this.dbName,
       masterUsername: "username",
@@ -17,6 +19,8 @@ export default class DataWarehouse extends Construct {
       nodeType: "dc2.large",
       publiclyAccessible: true,
     });
+
+    this.dbInitializedParam();
 
     // this.cluster = new Cluster(this, "RedshiftCluster", {
     //   clusterType: ClusterType.SINGLE_NODE,
@@ -42,6 +46,19 @@ export default class DataWarehouse extends Construct {
     //   tableName: "practice",
     //   distStyle: TableDistStyle.KEY,
     // });
+  }
+
+  private dbInitializedParam() {
+    const paramName = "/mattdata/redshift/dbinitialized";
+
+    // const curValue = StringParameter.fromStringParameterName(this, "CurDBInitializedParam", paramName);
+
+    // const newValue = curValue.stringValue ? curValue.stringValue : "false";
+
+    new StringParameter(this, "DBInitializedParam", {
+      parameterName: paramName,
+      stringValue: "false",
+    });
   }
 
   public getJDBCUrl() {
