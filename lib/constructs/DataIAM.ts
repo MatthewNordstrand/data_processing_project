@@ -62,6 +62,14 @@ export default class DataIAM extends Construct {
       new PolicyStatement({
         effect: Effect.ALLOW,
         resources: ["*"],
+        actions: ["redshift:*"],
+      })
+    );
+
+    this.lambdaRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: ["*"],
         actions: ["redshift-data:*"],
       })
     );
