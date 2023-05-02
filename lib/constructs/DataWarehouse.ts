@@ -16,7 +16,6 @@ export default class DataWarehouse extends Construct {
     });
 
     securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(5439));
-    securityGroup.addIngressRule(Peer.anyIpv6(), Port.tcp(5439));
 
     this.cluster = new CfnCluster(this, "RedshiftCluster", {
       clusterIdentifier: "mattdata-cluster",

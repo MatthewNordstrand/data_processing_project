@@ -10,6 +10,8 @@ async function handler(event: any) {
 
   const firehose = new Firehose();
 
+  const record = event.Records[0].dynamodb.NewImage;
+
   const processedRecords = event.Records.map((record: any) => {
     const image = record.dynamodb.NewImage;
 
@@ -42,7 +44,7 @@ async function init() {
 
   if (!_dbinitialized) {
     const query =
-      "CREATE TABLE practicetable (id VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY, name VARCHAR(255), practice VARCHAR(255));";
+      "CREATE TABLE practicetable (id VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255), practice VARCHAR(255));";
 
     const redshift = new RedshiftData();
     await redshift
