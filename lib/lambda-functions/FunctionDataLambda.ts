@@ -42,7 +42,7 @@ async function init() {
 
   if (!_dbinitialized) {
     const query =
-      "CREATE TABLE practicetable (id VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255), practice VARCHAR(255));";
+      "CREATE TABLE practicetable (id VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY, name VARCHAR(255), practice VARCHAR(255));";
 
     const redshift = new RedshiftData();
     await redshift
