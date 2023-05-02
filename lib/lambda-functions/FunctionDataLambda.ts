@@ -21,24 +21,22 @@ async function handler(event: any) {
 
     console.log(`Data: ${JSON.stringify(transformedData)}`);
 
-    const blob = Buffer.from(JSON.stringify(transformedData));
-
     return {
-      Data: blob,
+      Data: JSON.stringify(transformedData),
     };
   });
 
   await firehose
     .putRecordBatch({ DeliveryStreamName: streamName, Records: processedRecords }, (err, _data) => {
       if (err) throw new Error(err.stack);
+      else console.log("Successfully put data into stream!");
     })
     .promise();
 }
 
 async function init() {
-  const ssm = new SSM();
-
   if (!_streamName) {
+    const ssm = new SSM();
     _streamName = (await ssm.getParameter({ Name: "/mattdata/deliverystream/name" }).promise()).Parameter?.Value;
   }
 
