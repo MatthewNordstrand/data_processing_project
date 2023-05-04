@@ -8,10 +8,6 @@ async function handler(event: any) {
 
   if (!streamName) throw new Error("Unable to get the name for the Firehose Delivery Stream.");
 
-  const firehose = new Firehose();
-
-  const record = event.Records[0].dynamodb.NewImage;
-
   const processedRecords = event.Records.map((record: any) => {
     const image = record.dynamodb.NewImage;
 
@@ -28,6 +24,7 @@ async function handler(event: any) {
     };
   });
 
+  const firehose = new Firehose();
   await firehose
     .putRecordBatch({ DeliveryStreamName: streamName, Records: processedRecords }, (err, _data) => {
       if (err) throw new Error(err.stack);
